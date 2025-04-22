@@ -2,6 +2,11 @@ name: Build and Test Go App
 
 on:
   workflow_call:
+    inputs:
+      build-path:
+        description: 'Project path name'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -11,6 +16,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -21,7 +29,7 @@ jobs:
         run: go mod download
 
       - name: Build app
-        run: go build ./microservice/cmd/main.go
+        run: go build ${{ inputs.build-path }}/cmd/main.go
 
       - name: Run unit tests
-        run: go test ./microservice/... -v
+        run: go test ${{ inputs.build-path }}/... -v
