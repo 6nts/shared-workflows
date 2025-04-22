@@ -14,12 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository }}
-          ref: ${{ github.ref }}
-
+  
       - name: Install Trivy
         run: |
           echo "📥 Instalando Trivy..."

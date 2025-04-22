@@ -16,10 +16,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository }}
-          ref: ${{ github.ref }}
-
+    
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
