@@ -25,9 +25,9 @@ jobs:
       - name: Trivy - Secret scan (informativo)
         run: |
           echo "🔐 Buscando secretos..."
-          trivy fs --scanners secret --exit-code 0 --severity CRITICAL,HIGH,MEDIUM,LOW ./microservice
+          trivy fs --scanners secret --exit-code 0 --severity CRITICAL,HIGH,MEDIUM,LOW .
 
       - name: Trivy - Config scan (informativo)
         run: |
           echo "⚙️ Escaneo de configuración insegura..."
-          trivy config --exit-code 0 --severity CRITICAL,HIGH,MEDIUM,LOW ./microservice
+          trivy config --exit-code 0 --severity CRITICAL,HIGH,MEDIUM,LOW .
