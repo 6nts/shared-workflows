@@ -31,9 +31,8 @@ jobs:
 
       - name: OSV - Scan go.sum
         run: |
-          cd ${{ inputs.scan-path }}
-          osv-scanner --lockfile go.sum
-
+          osv-scanner --lockfile ${{ inputs.scan-path }}/go.sum
+        
       - name: Install Trivy
         run: |
           echo "📥 Instalando Trivy..."
