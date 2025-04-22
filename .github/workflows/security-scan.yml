@@ -28,10 +28,10 @@ jobs:
           go mod tidy
           go mod download
 
-      - name: Trivy - Vulnerabilities (go.mod + código)
+      - name: Trivy - Scan vulnerabilities
         run: |
           echo "🔍 Escaneando dependencias y código fuente..."
-          trivy fs --scan-go-mod --exit-code 1 --severity CRITICAL,HIGH ${{ inputs.scan-path }}
+          trivy fs --exit-code 1 --severity CRITICAL,HIGH ${{ inputs.scan-path }}
 
       - name: Trivy - Secret scan (informativo)
         run: |
