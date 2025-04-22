@@ -10,7 +10,7 @@ on:
 
 jobs:
   security-scan:
-    name: OSV + Trivy Scan
+    name: security scan!
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
       - name: OSV - Scan go.sum
         run: |
           cd ${{ inputs.scan-path }}
-          osv-scanner --lock go.sum
+          osv-scanner --lockfile go.sum
 
       - name: Install Trivy
         run: |
