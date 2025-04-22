@@ -12,6 +12,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Install Trivy
+        run: |
+          echo "📥 Instalando Trivy..."
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+      
       - name: Trivy - Vulnerabilities
         run: |
           echo "🔍 Escaneando dependencias y código fuente con Trivy..."
