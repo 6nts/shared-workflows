@@ -9,18 +9,13 @@ on:
         type: string
 
 jobs:
-  trivy-scan:
-    name: Trivy Security Scan
+  security-scan:
+    name: OSV + Trivy Scan
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Install Trivy (v0.61.1)
-        run: |
-          echo "📥 Instalando Trivy v0.61.1..."
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.61.1
 
       - name: Prepare Go modules
         run: |
@@ -28,10 +23,21 @@ jobs:
           go mod tidy
           go mod download
 
-      - name: Trivy - Scan vulnerabilities
+      - name: Install OSV-Scanner
         run: |
-          echo "🔍 Escaneando dependencias y código fuente..."
-          trivy fs --exit-code 1 --severity CRITICAL,HIGH ${{ inputs.scan-path }}
+          echo "📥 Instalando osv-scanner..."
+          go install github.com/google/osv-scanner/cmd/osv-scanner@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: OSV - Scan go.sum
+        run: |
+          cd ${{ inputs.scan-path }}
+          osv-scanner --lock go.sum
+
+      - name: Install Trivy
+        run: |
+          echo "📥 Instalando Trivy..."
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.61.1
 
       - name: Trivy - Secret scan (informativo)
         run: |
