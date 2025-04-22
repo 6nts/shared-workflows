@@ -16,16 +16,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-  
-      - name: Install Trivy
+
+      - name: Install Trivy (v0.61.1)
         run: |
-          echo "📥 Instalando Trivy..."
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-      
-      - name: Trivy - Vulnerabilities
+          echo "📥 Instalando Trivy v0.61.1..."
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.61.1
+
+      - name: Prepare Go modules
         run: |
-          echo "🔍 Escaneando dependencias y código fuente con Trivy..."
-          trivy fs --exit-code 1 --severity CRITICAL,HIGH ${{ inputs.scan-path }}
+          cd ${{ inputs.scan-path }}
+          go mod tidy
+          go mod download
+
+      - name: Trivy - Vulnerabilities (go.mod + código)
+        run: |
+          echo "🔍 Escaneando dependencias y código fuente..."
+          trivy fs --scan-go-mod --exit-code 1 --severity CRITICAL,HIGH ${{ inputs.scan-path }}
 
       - name: Trivy - Secret scan (informativo)
         run: |
@@ -36,4 +42,3 @@ jobs:
         run: |
           echo "⚙️ Escaneo de configuración insegura..."
           trivy config --exit-code 0 --severity CRITICAL,HIGH,MEDIUM,LOW ${{ inputs.scan-path }}
-          
